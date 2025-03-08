@@ -127,7 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sequentail List.cpp" />
+    <ClCompile Include="Sequentail List%28OOP%29.cpp" />
+    <ClCompile Include="Sequentail List(Without OOP).cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

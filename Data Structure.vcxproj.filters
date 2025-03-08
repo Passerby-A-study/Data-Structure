@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sequentail List.cpp">
+    <ClCompile Include="Sequentail List%28OOP%29.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequentail List(Without OOP).cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
