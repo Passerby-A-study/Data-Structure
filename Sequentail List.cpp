@@ -1,104 +1,135 @@
-#include<exception>
+#include <iostream>
+#include <stdexcept>
+
 template <typename Type>
-class SequentialList:public::std::exception {
+class SequentialList {
 private:
-	int Length;
-	Type* Elem;
+    int size;      
+    int capacity;  
+    Type* Elem;    
+
 public:
-	SequentialList(int Len);
-	SequentialList(int Len, Type& Target);
-	bool Init(Type& Target);
-	bool isEmpty();
-	bool isFull();
-	Type& Get(int index);
-	int Find(Type& object);
-	bool Pop(int index);
-	bool Insert(Type& target, int index);
-	bool Clear();
-	~SequentialList();
+    SequentialList(int Len);
+    ~SequentialList();
+
+    bool isEmpty() const;
+    bool isFull() const;
+
+    Type& Get(int index);
+    int Find(const Type& object);
+
+    void Pop(int index);
+    void Insert(const Type& target, int index);
+    void Clear();
 };
 
-template <typename Type>
-SequentialList<Type>::SequentialList(int Len) {
-	Type* p = new Type[Len];
-	Elem = p;
-	Length = Len;
-}
-template <typename Type>
-SequentialList<Type>::SequentialList(int Len, Type& Target) {
-	Type* p = new Type[Len];
-	Elem = p;
-	Length = Len;
-	Init(Target);
-}
-template <typename Type>
-bool SequentialList<Type>::Init(Type& Target) {
-	if (isEmpty == true)
-		return false;
-	for (auto element : *Elem)
-		element = Target;
-	return true;
-}
-template <typename Type>
-bool SequentialList<Type>::isEmpty() {
-	return Length > 0 ? 0 : 1;
-}
 
 template <typename Type>
-bool SequentialList<Type>::isFull(){
-	return Length < (sizeof(*Elem)/sizeof(Type)) ? 0 : 1;
+SequentialList<Type>::SequentialList(int Len) : size(0), capacity(Len) {
+    if (Len <= 0) {
+        throw std::invalid_argument("Capacity must be greater than zero.");
+    }
+    Elem = new Type[capacity];
 }
 
-template <typename Type>
-Type& SequentialList<Type>::Get(int index) {
-	return *(Elem + index - 1);
-}
-
-template <typename Type>
-int SequentialList<Type>::Find(Type& object) {
-	for (int i = 0; i < Length; i++)
-		if (*(Elem + i) == object)
-			return i + 1;
-}
-
-template <typename Type>
-bool SequentialList<Type>::Pop(int index) {
-	if (Length > 0) {
-		*(Elem + Length - 1) = NULL;
-		Length -= 1;
-		for (int i = index - 1; i < Length; i++)
-			*(Elem + i) = *(Elem + i + 1);
-		return true;
-	}
-	return false;
-}
-
-template <typename Type>
-bool SequentialList<Type>::Insert(Type& target,int index) {
-	if (Length + 1 > sizeof(*Elem) / sizeof(Type)) 
-		return false;
-	Length += 1;
-	for (int i = Length; i > index; i--)
-		*(Elem + i) = *(Elem + i - 1);
-	*(Elem + index - 1) = target;
-	return true;
-}
-
-template <typename Type>
-bool SequentialList<Type>::Clear() {
-	if (isEmpty() == true)
-		return false;
-	for (auto element : *Elem)
-		element = NULL;
-	return true;
-}
 
 template <typename Type>
 SequentialList<Type>::~SequentialList() {
-	delete[] Elem;
+    delete[] Elem;
+}
+
+
+template <typename Type>
+bool SequentialList<Type>::isEmpty() const {
+    return size == 0;
+}
+
+
+template <typename Type>
+bool SequentialList<Type>::isFull() const {
+    return size == capacity;
+}
+
+
+template <typename Type>
+Type& SequentialList<Type>::Get(int index) {
+    if (index < 1 || index > size) {
+        throw std::out_of_range("Index out of range in Get().");
+    }
+    return Elem[index - 1];
+}
+
+
+template <typename Type>
+int SequentialList<Type>::Find(const Type& object) {
+    for (int i = 0; i < size; i++) {
+        if (Elem[i] == object) {
+            return i + 1;  
+        }
+    }
+    throw std::runtime_error("Element not found in Find().");
+}
+
+
+
+template <typename Type>
+void SequentialList<Type>::Pop(int index) {
+    if (index < 1 || index > size) {
+        throw std::out_of_range("Index out of range in Pop().");
+    }
+    for (int i = index - 1; i < size - 1; i++) {
+        Elem[i] = Elem[i + 1];
+    }
+    size--;
+}
+
+
+template <typename Type>
+void SequentialList<Type>::Insert(const Type& target, int index) {
+    if (isFull()) {
+        throw std::overflow_error("List is full. Cannot insert.");
+    }
+    if (index < 1 || index > size + 1) {
+        throw std::out_of_range("Index out of range in Insert().");
+    }
+
+    
+    for (int i = size; i >= index; i--) {
+        Elem[i] = Elem[i - 1];
+    }
+
+    Elem[index - 1] = target;
+    size++;  
+}
+
+
+template <typename Type>
+void SequentialList<Type>::Clear() {
+    size = 0;
 }
 
 int main() {
+    try {
+        SequentialList<int> list(5);
 
-	return 0;
+        list.Insert(10, 1);
+        list.Insert(20, 2);
+        list.Insert(30, 3);
+
+        std::cout << "Element at index 2: " << list.Get(2) << std::endl;
+
+        list.Pop(2);
+        std::cout << "After Pop, Element at index 2: " << list.Get(2) << std::endl;
+
+        list.Insert(40, 2);
+        std::cout << "After Insert, Element at index 2: " << list.Get(2) << std::endl;
+
+        list.Get(10);  // ´¥·¢Òì³£
+
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+
+    return 0;
 }
