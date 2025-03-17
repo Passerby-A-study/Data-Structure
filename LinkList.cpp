@@ -33,35 +33,32 @@ void LinkList<Type>::CreatList_R() {
 	while (n--) {
 		ListNode* cur = new ListNode;
 		cin >> cur->data;
-		p->Next = &cur;
+		p->Next = cur;
+		cur->Next = nullptr;
 		p = p->Next;
+
 	}
 	cout << "Done!"<<endl;
 }
 
 template<typename Type>
 bool LinkList<Type>::isEmpty() {
-	if (Link->Next == nullptr) return true;
-	return false;
+	return Link->Next == nullptr;
 }
 
 template<typename Type>
 void LinkList<Type>::CreatList_H() {
 	int n;
-	ListNode* p = Link;
 	cout << "Pls Enter the scale of List: ";
 	cin >> n;
 	if (n <= 0) return;
+
 	cout << "Pls Enter the data of List: ";
-	ListNode* first = new ListNode;
-	cin >> first->data;
-	p = p->Next;
-	n -= 1;
 	while (n--) {
 		ListNode* cur = new ListNode;
 		cin >> cur->data;
-		cur->Next = p;
-		p = &cur;
+		cur->Next = Link->Next;  
+		Link->Next = cur;        
 	}
 	cout << "Done!" << endl;
 }
@@ -70,31 +67,37 @@ template<typename Type>
 bool LinkList<Type>::Insert(int n) {
 	ListNode* p = Link;
 	while (n--) {
+		if (p->Next == nullptr) break; 
 		p = p->Next;
 	}
+
 	ListNode* cur = new ListNode;
-	cout << "Pls Enter the Data : ";
+	cout << "Pls Enter the Data: ";
 	cin >> cur->data;
-	cur->Next = p->Next;
-	p->Next = cur;
+	cur->Next = p->Next;  
+	p->Next = cur;        
 	cout << "Done !" << endl;
+	return true;
 }
 
 template<typename Type>
 bool LinkList<Type>::Delete(int n) {
-	if (isEmpty() == true) return false;
+	if (isEmpty()||n < 1) return false;
 	ListNode* p = Link;
-	while (n--) {
+	for (int i = 0; i < n - 1; i++) {
+		if (p->Next == nullptr) return false;
 		p = p->Next;
 	}
-	ListNode* cur = new ListNode;
-	cur->Next = p->Next;
-	p->Next = cur;
+	ListNode* tmp = p->Next;
+	p->Next = p->Next->Next;
+	delete tmp;
 	cout << "Done !" << endl;
+	return true;
 }
 
+
 template<typename Type>
-LinkList<Type>::ListNode* LinkList<Type>::Find(Type& target) {
+typename LinkList<Type>::ListNode* LinkList<Type>::Find(Type& target) {
 	if (isEmpty() == true) return nullptr;
 	ListNode* p = Link;
 	while (p->Next != nullptr) {
@@ -107,13 +110,12 @@ LinkList<Type>::ListNode* LinkList<Type>::Find(Type& target) {
 
 template<typename Type>
 Type LinkList<Type>::Find(int n) {
-	if (isEmpty() == true) return NULL;
+	if (isEmpty()) return {}; 
+
 	ListNode* p = Link;
-	if (int i=1;i<=n;i++)
-	{
+	for (int i = 1; i <= n; i++) { 
 		p = p->Next;
+		if (p == nullptr) return {};  
 	}
 	return p->data;
 }
-
-
