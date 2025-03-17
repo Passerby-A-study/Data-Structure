@@ -124,7 +124,7 @@ int main() {
         list.Insert(40, 2);
         std::cout << "After Insert, Element at index 2: " << list.Get(2) << std::endl;
 
-        list.Get(10);  // ´¥·¢Òì³£
+        list.Get(10); 
 
     }
     catch (const std::exception& e) {
