@@ -19,6 +19,7 @@ public:
 	void CreatList_H();
 	void CreatList_R();
 	bool isEmpty();
+	~LinkList();
 };
 
 
@@ -118,4 +119,15 @@ Type LinkList<Type>::Find(int n) {
 		if (p == nullptr) return {};  
 	}
 	return p->data;
+}
+
+template<typename Type>
+LinkList<Type>::~LinkList() {
+	ListNode* p = Link->Next;
+	while (p != nullptr) {
+		ListNode* temp = p;
+		p = p->Next;
+		delete temp;
+	}
+	Link->Next = nullptr; 
 }
