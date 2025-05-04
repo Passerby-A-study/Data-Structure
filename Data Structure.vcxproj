@@ -130,6 +130,7 @@
     <ClCompile Include="CircularLinkList.cpp" />
     <ClCompile Include="DoubleLinkList.cpp" />
     <ClCompile Include="LinkList.cpp" />
+    <ClCompile Include="Queue.cpp" />
     <ClCompile Include="Sequentail List%28OOP%29.cpp" />
     <ClCompile Include="Sequentail List(Without OOP).cpp" />
   </ItemGroup>
