@@ -36,7 +36,7 @@
     <ClCompile Include="LinkQueue(OOP).cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SqStack.cpp">
+    <ClCompile Include="SqStack%28OOP%29.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -50,7 +50,7 @@ SqQueue<Type>::SqQueue()
 template<class Type>
 Status SqQueue<Type>::InitQueue()
 {
-	Location = new Type(SIZE);
+	Location = new Type[SIZE];
 	Len = Front = Rear = 0;
 	if (!Location)
 	{
@@ -66,44 +66,20 @@ SqQueue<Type>::~SqQueue()
 }
 
 template<class Type>
-Status SqQueue<Type>::DestroyQueue()
-{
+Status SqQueue<Type>::DestroyQueue() {
 	delete[] Location;
+	Location = nullptr;
 	Len = Front = Rear = 0;
-	if (!Location)
-	{
-		return OK;
-	}
-	else
-	{
-		return ERROR;
-	}
+	return OK;
 }
+
 
 template<class Type>
-Status SqQueue<Type>::ClearQueue()
-{
-	Type* used = Location;
-	Location = nullptr;
-	delete[] used;
-	try
-	{
-		InitQueue();
-	}
-	catch (const char* s)
-	{
-		std::cout << s << std::endl;
-	}
-
-	if (Location && Front == 0 && Rear == 0 && Len == 0)
-	{
-		return OK;
-	}
-	else
-	{
-		return ERROR;
-	}
+Status SqQueue<Type>::ClearQueue() {
+	Front = Rear = Len = 0;
+	return OK;
 }
+
 
 template<class Type>
 Status SqQueue<Type>::QueueTraverse()
