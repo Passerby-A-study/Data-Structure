@@ -134,6 +134,7 @@
     <ClCompile Include="SqQueue%28OOP%29.cpp" />
     <ClCompile Include="Sequentail List%28OOP%29.cpp" />
     <ClCompile Include="Sequentail List(Without OOP).cpp" />
+    <ClCompile Include="SqStack.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
