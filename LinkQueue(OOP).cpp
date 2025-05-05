@@ -9,7 +9,7 @@ template<class Type>
 class SqQueue {
 private:
 
- 	static const int SIZE = MAXQSIZE;
+	static const int SIZE = MAXQSIZE;
 	Type* Location;
 	int Front;
 	int Rear;
@@ -41,7 +41,7 @@ SqQueue<Type>::SqQueue()
 	{
 		InitQueue();
 	}
-	catch (const char *s)
+	catch (const char* s)
 	{
 		std::cout << s << std::endl;
 	}
@@ -217,9 +217,12 @@ int main()
 				std::cout << "队列无元素！" << std::endl;
 				break;
 			}
-			std::cout << "队列元素为: ";
-			IntQueue.QueueTraverse();
-			break;
+			else
+			{
+				std::cout << "队列元素为: ";
+				IntQueue.QueueTraverse();
+				break;
+			}
 		case 4:
 			if (IntQueue.ClearQueue() == OK) {
 				std::cout << "队列清空成功！" << std::endl;

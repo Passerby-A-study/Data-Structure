@@ -30,7 +30,10 @@
     <ClCompile Include="DoubleLinkList.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Queue.cpp">
+    <ClCompile Include="SqQueue%28OOP%29.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkQueue(OOP).cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
