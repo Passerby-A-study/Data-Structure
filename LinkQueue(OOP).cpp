@@ -1,24 +1,27 @@
 #include<iostream>
-#define MAXQSIZE 10
 #define OK 1
 #define ERROR 0
 #define OVERFLOW -2
 typedef int Status;
 
 template<class Type>
-class SqQueue {
+class LinkQueue {
 private:
 
-	static const int SIZE = MAXQSIZE;
-	Type* Location;
-	int Front;
-	int Rear;
+	struct LQNode
+	{
+		Type Data;
+		LQNode* Next;
+	};
+
+	LQNode* Front;
+	LQNode* Rear;
 	int Len;
 
 public:
 
-	SqQueue();
-	~SqQueue();
+	LinkQueue();
+	~LinkQueue();
 
 	Status InitQueue();
 	Status DestroyQueue();
@@ -35,7 +38,7 @@ public:
 
 
 template<class Type>
-SqQueue<Type>::SqQueue()
+LinkQueue<Type>::LinkQueue()
 {
 	try
 	{
@@ -48,11 +51,14 @@ SqQueue<Type>::SqQueue()
 }
 
 template<class Type>
-Status SqQueue<Type>::InitQueue()
+Status LinkQueue<Type>::InitQueue()
 {
-	Location = new Type(SIZE);
-	Len = Front = Rear = 0;
-	if (!Location)
+	LQNode* Head = new LQNode;
+	Head->Next = nullptr;
+	Len = 0;
+	Front = Rear = Head;
+
+	if (!Head)
 	{
 		throw "cache diliver failure.";
 	}
@@ -60,17 +66,26 @@ Status SqQueue<Type>::InitQueue()
 }
 
 template<class Type>
-SqQueue<Type>::~SqQueue()
+LinkQueue<Type>::~LinkQueue()
 {
 	DestroyQueue();
 }
 
 template<class Type>
-Status SqQueue<Type>::DestroyQueue()
+Status LinkQueue<Type>::DestroyQueue()
 {
-	delete[] Location;
-	Len = Front = Rear = 0;
-	if (!Location)
+	LQNode* pos = Front->Next;
+	Front->Next = nullptr;
+	while (pos != nullptr)
+	{
+		LQNode* used = pos;
+		pos = pos->Next;
+		delete used;
+	}
+	Len = 0;
+	Rear = Front;
+
+	if (!Front->Next)
 	{
 		return OK;
 	}
@@ -81,21 +96,9 @@ Status SqQueue<Type>::DestroyQueue()
 }
 
 template<class Type>
-Status SqQueue<Type>::ClearQueue()
+Status LinkQueue<Type>::ClearQueue()
 {
-	Type* used = Location;
-	Location = nullptr;
-	delete[] used;
-	try
-	{
-		InitQueue();
-	}
-	catch (const char* s)
-	{
-		std::cout << s << std::endl;
-	}
-
-	if (Location && Front == 0 && Rear == 0 && Len == 0)
+	if (DestroyQueue())
 	{
 		return OK;
 	}
@@ -103,10 +106,11 @@ Status SqQueue<Type>::ClearQueue()
 	{
 		return ERROR;
 	}
+
 }
 
 template<class Type>
-Status SqQueue<Type>::QueueTraverse()
+Status LinkQueue<Type>::QueueTraverse()
 {
 	if (QueueEmpty())
 	{
@@ -114,60 +118,62 @@ Status SqQueue<Type>::QueueTraverse()
 		return ERROR;
 	}
 
-	int index = Front;
-	for (int i = 0; i < Len; i++)
+	LQNode* pos = Front->Next;
+	while (pos != nullptr)
 	{
-		std::cout << Location[index] << " ";
-		index = (index + 1) % SIZE;
+		std::cout << pos->Data << " ";
+		pos = pos->Next;
 	}
 	std::cout << std::endl;
-
 	return OK;
 
 }
 
 template<class Type>
-bool SqQueue<Type>::QueueEmpty()
+bool LinkQueue<Type>::QueueEmpty()
 {
 	return Front == Rear;
 }
 
 template<class Type>
-int SqQueue<Type>::QueueLength()
+int LinkQueue<Type>::QueueLength()
 {
 	return Len;
 }
 
 template<class Type>
-const Type& SqQueue<Type>::GetHead()
+const Type& LinkQueue<Type>::GetHead()
 {
-	return Location[Front];
+	return Front->Next->Data;
 }
 
 template<class Type>
-Status SqQueue<Type>::EnQueue(Type& Obj)
+Status LinkQueue<Type>::EnQueue(Type& Obj)
 {
-	if (Len == SIZE)
-	{
-		return ERROR;
-	}
-
-	Location[Rear] = Obj;
-	Rear = (Rear + 1) % SIZE;
+	LQNode* target = new LQNode;
+	target->Data = Obj;
+	target->Next = nullptr;
+	Rear->Next = target;
+	Rear = Rear->Next;
 	Len++;
-
 	return OK;
 }
 
 template<class Type>
-Status SqQueue<Type>::DeQueue()
+Status LinkQueue<Type>::DeQueue()
 {
 	if (QueueEmpty())
 	{
 		return ERROR;
 	}
 
-	Front = (Front + 1) % SIZE;
+	LQNode* pos = Front->Next;
+	Front->Next = Front->Next->Next;
+	if (pos->Next == Rear)
+	{
+		Rear = Front->Next;
+	}
+	delete pos;
 	Len--;
 	return OK;
 }
@@ -176,7 +182,7 @@ Status SqQueue<Type>::DeQueue()
 
 int main()
 {
-	SqQueue<int> IntQueue;
+	LinkQueue<int> IntQueue;
 	int choice;
 	int value;
 
