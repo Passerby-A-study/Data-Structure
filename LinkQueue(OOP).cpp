@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #define OK 1
 #define ERROR 0
 #define OVERFLOW -2
@@ -7,9 +7,7 @@ typedef int Status;
 template<class Type>
 class LinkQueue {
 private:
-
-	struct LQNode
-	{
+	struct LQNode {
 		Type Data;
 		LQNode* Next;
 	};
@@ -19,7 +17,6 @@ private:
 	int Len;
 
 public:
-
 	LinkQueue();
 	~LinkQueue();
 
@@ -36,152 +33,114 @@ public:
 	Status DeQueue();
 };
 
-
 template<class Type>
-LinkQueue<Type>::LinkQueue()
-{
-	try
-	{
-		InitQueue();
-	}
-	catch (const char* s)
-	{
-		std::cout << s << std::endl;
-	}
+LinkQueue<Type>::LinkQueue() {
+	InitQueue();
 }
 
 template<class Type>
-Status LinkQueue<Type>::InitQueue()
-{
+Status LinkQueue<Type>::InitQueue() {
 	LQNode* Head = new LQNode;
 	Head->Next = nullptr;
-	Len = 0;
 	Front = Rear = Head;
-
-	if (!Head)
-	{
-		throw "cache diliver failure.";
-	}
+	Len = 0;
 	return OK;
 }
 
 template<class Type>
-LinkQueue<Type>::~LinkQueue()
-{
+LinkQueue<Type>::~LinkQueue() {
 	DestroyQueue();
 }
 
 template<class Type>
-Status LinkQueue<Type>::DestroyQueue()
-{
-	LQNode* pos = Front->Next;
-	Front->Next = nullptr;
-	while (pos != nullptr)
-	{
-		LQNode* used = pos;
+Status LinkQueue<Type>::DestroyQueue() {
+	LQNode* pos = Front;
+	while (pos != nullptr) {
+		LQNode* temp = pos;
 		pos = pos->Next;
-		delete used;
+		delete temp;
 	}
+	Front = Rear = nullptr;
 	Len = 0;
+	return OK;
+}
+
+template<class Type>
+Status LinkQueue<Type>::ClearQueue() {
+	LQNode* pos = Front->Next;
+	while (pos != nullptr) {
+		LQNode* temp = pos;
+		pos = pos->Next;
+		delete temp;
+	}
+	Front->Next = nullptr;
 	Rear = Front;
-
-	if (!Front->Next)
-	{
-		return OK;
-	}
-	else
-	{
-		return ERROR;
-	}
+	Len = 0;
+	return OK;
 }
 
 template<class Type>
-Status LinkQueue<Type>::ClearQueue()
-{
-	if (DestroyQueue())
-	{
-		return OK;
-	}
-	else
-	{
-		return ERROR;
-	}
-
-}
-
-template<class Type>
-Status LinkQueue<Type>::QueueTraverse()
-{
-	if (QueueEmpty())
-	{
-		std::cout << std::endl;
+Status LinkQueue<Type>::QueueTraverse() {
+	if (QueueEmpty()) {
+		std::cout << "队列为空。" << std::endl;
 		return ERROR;
 	}
 
 	LQNode* pos = Front->Next;
-	while (pos != nullptr)
-	{
+	while (pos != nullptr) {
 		std::cout << pos->Data << " ";
 		pos = pos->Next;
 	}
 	std::cout << std::endl;
 	return OK;
-
 }
 
 template<class Type>
-bool LinkQueue<Type>::QueueEmpty()
-{
+bool LinkQueue<Type>::QueueEmpty() {
 	return Front == Rear;
 }
 
 template<class Type>
-int LinkQueue<Type>::QueueLength()
-{
+int LinkQueue<Type>::QueueLength() {
 	return Len;
 }
 
 template<class Type>
-const Type& LinkQueue<Type>::GetHead()
-{
+const Type& LinkQueue<Type>::GetHead() {
+	if (QueueEmpty()) {
+		throw "队列为空，无法获取队首元素！";
+	}
 	return Front->Next->Data;
 }
 
 template<class Type>
-Status LinkQueue<Type>::EnQueue(Type& Obj)
-{
-	LQNode* target = new LQNode;
-	target->Data = Obj;
-	target->Next = nullptr;
-	Rear->Next = target;
-	Rear = Rear->Next;
+Status LinkQueue<Type>::EnQueue(Type& Obj) {
+	LQNode* node = new LQNode;
+	node->Data = Obj;
+	node->Next = nullptr;
+	Rear->Next = node;
+	Rear = node;
 	Len++;
 	return OK;
 }
 
 template<class Type>
-Status LinkQueue<Type>::DeQueue()
-{
-	if (QueueEmpty())
-	{
+Status LinkQueue<Type>::DeQueue() {
+	if (QueueEmpty()) {
 		return ERROR;
 	}
 
-	LQNode* pos = Front->Next;
-	Front->Next = Front->Next->Next;
-	if (pos->Next == Rear)
-	{
-		Rear = Front->Next;
+	LQNode* temp = Front->Next;
+	Front->Next = temp->Next;
+	if (Rear == temp) {
+		Rear = Front; 
 	}
-	delete pos;
+	delete temp;
 	Len--;
 	return OK;
 }
 
-
-
-int main()
-{
+int main() {
 	LinkQueue<int> IntQueue;
 	int choice;
 	int value;
@@ -205,9 +164,6 @@ int main()
 			if (IntQueue.EnQueue(value) == OK) {
 				std::cout << "入队成功！" << std::endl;
 			}
-			else {
-				std::cout << "队列已满，入队失败！" << std::endl;
-			}
 			break;
 		case 2:
 			if (IntQueue.DeQueue() == OK) {
@@ -218,34 +174,22 @@ int main()
 			}
 			break;
 		case 3:
-			if (IntQueue.QueueLength() == 0)
-			{
-				std::cout << "队列无元素！" << std::endl;
-				break;
-			}
-			else
-			{
-				std::cout << "队列元素为: ";
-				IntQueue.QueueTraverse();
-				break;
-			}
+			IntQueue.QueueTraverse();
+			break;
 		case 4:
 			if (IntQueue.ClearQueue() == OK) {
 				std::cout << "队列清空成功！" << std::endl;
-			}
-			else {
-				std::cout << "队列清空失败！" << std::endl;
 			}
 			break;
 		case 5:
 			std::cout << "队列长度为: " << IntQueue.QueueLength() << std::endl;
 			break;
 		case 6:
-			if (!IntQueue.QueueEmpty()) {
+			try {
 				std::cout << "队首元素为: " << IntQueue.GetHead() << std::endl;
 			}
-			else {
-				std::cout << "队列为空，没有队首元素！" << std::endl;
+			catch (const char* msg) {
+				std::cout << msg << std::endl;
 			}
 			break;
 		case 0:
