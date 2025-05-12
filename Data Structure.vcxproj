@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="CircularLinkList.cpp" />
     <ClCompile Include="DoubleLinkList.cpp" />
+    <ClCompile Include="LinkBinaryTree.cpp" />
     <ClCompile Include="LinkList.cpp" />
     <ClCompile Include="LinkQueue(OOP).cpp" />
     <ClCompile Include="SqQueue%28OOP%29.cpp" />

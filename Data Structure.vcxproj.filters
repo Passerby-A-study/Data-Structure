@@ -39,5 +39,8 @@
     <ClCompile Include="SqStack%28OOP%29.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LinkBinaryTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
